@@ -1,5 +1,5 @@
 import React from 'react';
-import {Card , CardImg, CardImgOverlay, 
+import {Card , CardImg, 
     CardText, CardBody, CardTitle} from 'reactstrap';
     
 const DishDesc = (dish) => {
@@ -23,7 +23,7 @@ const DishComments = (dish) => {
                   return (
                       <div key={comment.id}>
                           <div  className="m-3">{comment.comment}</div>
-                  <div  className="m-3">-- {comment.author}, {comment.date}</div>
+                  <div  className="m-3">-- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</div>
                       </div>
                   );
               })}
@@ -31,11 +31,9 @@ const DishComments = (dish) => {
        );
 }
 
-class DishDetail extends React.Component {
-    render()
-    {
-    const dish = this.props.dish;
-    if(dish != null)
+const DishDetail = ({dish}) => {
+
+    if(dish !== undefined)
     {
        return(
            <div className="row">   
@@ -48,7 +46,6 @@ class DishDetail extends React.Component {
         return (
             <div></div>
         );
-    }
     }
 }
 
