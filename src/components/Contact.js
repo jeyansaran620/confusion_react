@@ -1,7 +1,7 @@
 import React from 'react';
 import { Breadcrumb, BreadcrumbItem} from 'reactstrap';
 import { Link } from 'react-router-dom';
-const Contact = (props) => {
+const Contact = () => {
     return(
         <div className="container">
              <div className="row">
