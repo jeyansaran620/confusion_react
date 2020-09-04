@@ -132,7 +132,7 @@ class Contact extends React.Component {
                                 valid = {errors.firstName === ''}
                                 invalid = {errors.firstName !== ''}
                                 onBlur = {this.handleBlur('firstName')}
-                                 onChange={this.handleInputChange}/>
+                                onChange={this.handleInputChange}/>
                                 <FormFeedback>
                                     {errors.firstName}
                                 </FormFeedback>
