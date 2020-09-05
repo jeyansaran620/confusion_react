@@ -33,8 +33,8 @@ class DishDetail extends React.Component {
    }
 
    handleSubmit(values) {
-    console.log(JSON.stringify(values));
-    alert(JSON.stringify(values));
+       this.props.addComment(this.props.dishId,values.rating,values.author,values.comment);
+       this.toggleModal();
 }
     
   DishDesc = (dish) => {
@@ -64,7 +64,7 @@ class DishDetail extends React.Component {
                   );
               })}
             <Button outline onClick={() => this.toggleModal()} >
-            <span className="fa fa-sign-in fa-lg" ></span>
+            <span className="fa fa-pencil fa-lg" ></span>
             Submit Comment</Button>
            </div>
        );
@@ -113,9 +113,9 @@ render(){
                                 </Col>
                             </Row>
                             <Row className="form-group">
-                                <Label htmlFor="yourname" md={2}>Your Name</Label>
+                                <Label htmlFor="author" md={2}>Your Name</Label>
                                 <Col md={10}>
-                                    <Control.text model=".yourname" id="yourname" name="yourname"
+                                    <Control.text model=".author" id="author" name="yourname"
                                         placeholder="Your Name"
                                         className="form-control"
                                         validators={{
