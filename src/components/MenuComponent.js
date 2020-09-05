@@ -4,9 +4,31 @@ import {Card , CardImg, CardImgOverlay,
     Breadcrumb,
     BreadcrumbItem} from 'reactstrap';
 import {Link} from 'react-router-dom';
+import { Loading } from './LoadingComponent';
+
 
 const Menu = ({menu}) => {
-
+      console.log(menu)
+      if (menu.isLoading) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
+    else if (menu.errMess) {
+        return(
+            <div className="container">
+                <div className="row"> 
+                    <div className="col-12">
+                        <h4>{menu.errMess}</h4>
+                    </div>
+                </div>
+            </div>
+        );
+    }
         return (
             <div className="container">
             <div className="row">
@@ -19,7 +41,7 @@ const Menu = ({menu}) => {
                </div>
             </div>
           <div className="row">
-            {menu.map((dish) => {
+            {menu.dishes.map((dish) => {
                return (
                  <div key={dish.id} className ="col-12 col-md-5 m-1">
                    <Card>

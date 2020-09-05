@@ -3,7 +3,7 @@ import React from 'react';
 import {Card , CardImg, CardText, CardBody, Row, Col, Label,
      CardTitle, Breadcrumb, BreadcrumbItem, Button, Modal, 
      ModalHeader, ModalBody} from 'reactstrap';
-     
+import { Loading } from './LoadingComponent';    
 import { Control, LocalForm, Errors } from 'react-redux-form';
 
 import {Link} from 'react-router-dom';
@@ -72,10 +72,28 @@ class DishDetail extends React.Component {
 
 render(){
 
-    const dish = this.props.dish;
+    const dish = this.props.menu.dishes.filter((dish) => dish.id === this.props.dishId)[0];
     const comments = this.props.comments;
 
-    if(dish !== undefined)
+    if (this.props.menu.isLoading) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
+    else if (this.props.menu.errMess) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <h4>{this.props.errMess}</h4>
+                </div>
+            </div>
+        );
+    }
+    else if(dish !== undefined)
     {
 
        return(

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Card, CardImg, CardText,
      CardBody, CardTitle, CardSubtitle} from 'reactstrap';
-
+import { Loading } from './LoadingComponent';
 
 const RenderCard = ({item}) => {
     return (
@@ -19,11 +19,25 @@ const RenderCard = ({item}) => {
 
 
 const Home  = (props) => {
+
+    if (props.menu.isLoading) {
+        return(
+                <Loading />
+        );
+    }
+    else if (props.menu.errMess) {
+        return(
+                <h4>{props.menu.errMess}</h4>
+        );
+    }
+    else
+        console.log(props.menu)
+       const dish = props.menu.dishes.filter((dish) => dish.featured)[0]
     return (
         <div className="container">
             <div className="row align-items-start">
                 <div className="col-12 col-md m-1">
-                    <RenderCard item={props.dish}/>
+                    <RenderCard item={dish}/>
                 </div>
                 <div className="col-12 col-md m-1">
                     <RenderCard item={props.promotion}/>
