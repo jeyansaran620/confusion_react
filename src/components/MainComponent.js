@@ -8,8 +8,10 @@ import Contact from './Contact';
 import Footer from './Footer';
 import {Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import {connect} from 'react-redux';
-import {postComment, fetchPromos, fetchComments, fetchLeaders, fetchDishes} from '../redux/ActionCreaters';
+import {postComment, fetchPromos, fetchComments, fetchLeaders, fetchDishes, postFeedback} from '../redux/ActionCreaters';
 import { actions } from 'react-redux-form';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
+
 class Main extends React.Component {
 
   componentDidMount() {
@@ -43,15 +45,18 @@ class Main extends React.Component {
   return (
     <div>   
      <Header />
-    
+     <TransitionGroup>
+            <CSSTransition key={this.props.location.key} classNames="page" timeout={300}>
        <Switch>
          <Route path="/home" component={HomePage} />
          <Route exact path="/menu" component={() =>  <Menu menu={this.props.dishes}  /> } />
          <Route path ="/menu/:dishId" component={dishWithId} />
          <Route exact path="/aboutus" component={() =>  <About leaders={this.props.leaders}/> } />
-         <Route exact path="/contactus" component={() =>  <Contact resetFeedbackForm={this.props.resetFeedbackForm}/> } />
+         <Route exact path="/contactus" component={() =>  <Contact resetFeedbackForm={this.props.resetFeedbackForm}  postFeedback={this.props.postFeedback}/> } />
          <Redirect to="/home" />
        </Switch>
+       </CSSTransition>
+          </TransitionGroup>
     <Footer />
     </div>
   );
@@ -68,6 +73,7 @@ const mapStateToProps = state => {
 }
 const mapDispatchToProps = dispatch => ({
   postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment)),
+  postFeedback: (firstname, lastname, telnum,email,agree,contactType,message) => dispatch(postFeedback(firstname, lastname, telnum,email,agree,contactType,message)),
   fetchDishes: () => { dispatch(fetchDishes())},
   resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
   fetchComments: () => dispatch(fetchComments()),

@@ -2,6 +2,7 @@ import React from 'react';
 import {Card, CardImg, CardText,
      CardBody, CardTitle, CardSubtitle} from 'reactstrap';
 import { Loading } from './LoadingComponent';
+import { FadeTransform } from 'react-animation-components';
 import { baseUrl } from '../shared/baseUrl';
 
 const RenderCard = ({isLoading,errMess,item}) => {
@@ -17,6 +18,11 @@ const RenderCard = ({isLoading,errMess,item}) => {
     }
     else
     return (
+        <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
         <Card>
             <CardImg src={baseUrl + item.image} alt={item.name}/>
             <CardBody>
@@ -25,13 +31,13 @@ const RenderCard = ({isLoading,errMess,item}) => {
                 <CardText>{item.description}</CardText>
             </CardBody>
         </Card>
+        </FadeTransform>
     );
 }
 
 
 
 const Home  = (props) => {
-    console.log(props);
     return (
         <div className="container">
             <div className="row align-items-start">

@@ -4,6 +4,7 @@ import {Card , CardImg, CardText, CardBody, Row, Col, Label,
      CardTitle, Breadcrumb, BreadcrumbItem, Button, Modal, 
      ModalHeader, ModalBody} from 'reactstrap';
 import { Loading } from './LoadingComponent';    
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 
 import {Link} from 'react-router-dom';
@@ -72,6 +73,11 @@ class DishDetail extends React.Component {
            <h3>Menu</h3>
         </div>
      </div>
+     <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
        <Card>
             <CardImg width="100%" src={baseUrl + dish1.image} alt={dish1.name} />
             <CardBody> 
@@ -79,6 +85,7 @@ class DishDetail extends React.Component {
                    <CardText>{dish1.description}</CardText>
             </CardBody>
        </Card>
+       </FadeTransform>
        </div>
            ); 
     }
@@ -109,14 +116,16 @@ class DishDetail extends React.Component {
        return(
            <div className ="col-12 col-md-5 m-1">
            <h3>Comments</h3>
+           <Stagger in>
               {comment.map((comment) =>{
                   return (
-                      <div key={comment.id}>
+                      <Fade in key={comment.id}>
                           <div  className="m-3">{comment.comment}</div>
                   <div  className="m-3">-- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}</div>
-                      </div>
+                      </Fade>
                   );
               })}
+              </Stagger>
             <Button outline onClick={() => this.toggleModal()} >
             <span className="fa fa-pencil fa-lg" ></span>
             Submit Comment</Button>
