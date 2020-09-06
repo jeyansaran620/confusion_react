@@ -8,29 +8,33 @@ import Contact from './Contact';
 import Footer from './Footer';
 import {Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import {connect} from 'react-redux';
-import {addComment, fetchDishes} from '../redux/ActionCreaters';
+import {postComment, fetchPromos, fetchComments, fetchLeaders, fetchDishes} from '../redux/ActionCreaters';
 import { actions } from 'react-redux-form';
 class Main extends React.Component {
 
   componentDidMount() {
     this.props.fetchDishes();
+    this.props.fetchComments();
+    this.props.fetchPromos();
+    this.props.fetchLeaders();
   }
+  
 
   render()
   {
     const HomePage = () => {
       return ( 
-        <Home menu={this.props.dishes}
-        promotion={this.props.promotions.filter((promo) => promo.featured)[0]}
-        leader={this.props.leaders.filter((lead) => lead.featured)[0]}
+        <Home dish={this.props.dishes}
+        promotion={this.props.promotions}
+        leader={this.props.leaders}
         />
       )
     }
     const dishWithId = ({match}) => {
       return (    
-           <DishDetail menu = {this.props.dishes}
-              comments = {this.props.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))}
-              addComment={this.props.addComment}
+           <DishDetail dish = {this.props.dishes}
+              comments = {this.props.comments}
+              postComment={this.props.postComment}
               dishId={parseInt(match.params.dishId,10)}
              />
         );
@@ -62,10 +66,13 @@ const mapStateToProps = state => {
      promotions : state.promotions
   }
 }
-const mapDispatchToProps = (dispatch) => ({
-   addComment : (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
-   fetchDishes: () => { dispatch(fetchDishes())},
-   resetFeedbackForm: () => { dispatch(actions.reset('feedback'))}
-})
+const mapDispatchToProps = dispatch => ({
+  postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment)),
+  fetchDishes: () => { dispatch(fetchDishes())},
+  resetFeedbackForm: () => { dispatch(actions.reset('feedback'))},
+  fetchComments: () => dispatch(fetchComments()),
+  fetchPromos: () => dispatch(fetchPromos()),
+  fetchLeaders: () => dispatch(fetchLeaders())
+});
 
 export default withRouter(connect(mapStateToProps,mapDispatchToProps)(Main));

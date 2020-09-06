@@ -7,7 +7,7 @@ import { Loading } from './LoadingComponent';
 import { Control, LocalForm, Errors } from 'react-redux-form';
 
 import {Link} from 'react-router-dom';
-
+import { baseUrl } from '../shared/baseUrl';
 
 const required = (val) => val && val.length;
 const maxLength = (len) => (val) => !(val) || (val.length <= len);
@@ -33,29 +33,83 @@ class DishDetail extends React.Component {
    }
 
    handleSubmit(values) {
-       this.props.addComment(this.props.dishId,values.rating,values.author,values.comment);
+       this.props.postComment(this.props.dishId,values.rating,values.author,values.comment);
        this.toggleModal();
 }
     
   DishDesc = (dish) => {
-           return(           
-     <div className ="col-12 col-md-5 m-1">
+    
+
+    if (dish.isLoading) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
+    else if (dish.errMess) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <h4>{dish.errMess}</h4>
+                </div>
+            </div>
+        );
+    }
+    else 
+    {
+        const dish1 = dish.dishes.filter((dish) => dish.id === this.props.dishId)[0];
+     return(   
+    <div className ="col-12 col-md-5 m-1">
+     <div className="row">
+        <Breadcrumb>
+        <BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
+           <BreadcrumbItem active>{dish1.name}</BreadcrumbItem>
+        </Breadcrumb>
+        <div className="col-12"> 
+           <h3>Menu</h3>
+        </div>
+     </div>
        <Card>
-            <CardImg width="100%" src={dish.image} alt={dish.name} />
+            <CardImg width="100%" src={baseUrl + dish1.image} alt={dish1.name} />
             <CardBody> 
-              <CardTitle><h5>{dish.name}</h5></CardTitle>
-                   <CardText>{dish.description}</CardText>
+              <CardTitle><h5>{dish1.name}</h5></CardTitle>
+                   <CardText>{dish1.description}</CardText>
             </CardBody>
        </Card>
        </div>
            ); 
     }
+}
 
    DishComments = (comments) => {
+    if (comments.isLoading) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
+    else if (comments.errMess) {
+        return(
+            <div className="container">
+                <div className="row">            
+                    <h4>{comments.errMess}</h4>
+                </div>
+            </div>
+        );
+    }
+    else 
+    {
+        const comment = comments.comments.filter((comment) => comment.dishId === this.props.dishId);
        return(
            <div className ="col-12 col-md-5 m-1">
            <h3>Comments</h3>
-              {comments.map((comment) =>{
+              {comment.map((comment) =>{
                   return (
                       <div key={comment.id}>
                           <div  className="m-3">{comment.comment}</div>
@@ -68,48 +122,17 @@ class DishDetail extends React.Component {
             Submit Comment</Button>
            </div>
        );
-}
+   }
+ }
 
 render(){
-
-    const dish = this.props.menu.dishes.filter((dish) => dish.id === this.props.dishId)[0];
-    const comments = this.props.comments;
-
-    if (this.props.menu.isLoading) {
-        return(
-            <div className="container">
-                <div className="row">            
-                    <Loading />
-                </div>
-            </div>
-        );
-    }
-    else if (this.props.menu.errMess) {
-        return(
-            <div className="container">
-                <div className="row">            
-                    <h4>{this.props.errMess}</h4>
-                </div>
-            </div>
-        );
-    }
-    else if(dish !== undefined)
-    {
-
        return(
+        <>
         <div className="container">
-        <div className="row">
-           <Breadcrumb>
-           <BreadcrumbItem><Link to='/menu'>Menu</Link></BreadcrumbItem>
-              <BreadcrumbItem active>{dish.name}</BreadcrumbItem>
-           </Breadcrumb>
-           <div className="col-12"> 
-              <h3>Menu</h3>
+           <div className="row">
+           {this.DishDesc(this.props.dish)}
+           {this.DishComments(this.props.comments)}
            </div>
-        </div>
-        <div className="row">   
-           {this.DishDesc(dish)}
-           {this.DishComments(comments)}
         </div>
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>
@@ -170,15 +193,9 @@ render(){
                         </LocalForm>
                     </ModalBody>
                 </Modal>
-        </div>
+        </>
        )
     }
-    else {
-        return (
-            <div></div>
-        );
-    }
   }
-}
 
 export default DishDetail;
